@@ -1,0 +1,18 @@
+# credenciais — NUNCA subir ao GitHub
+service_account.json
+token.json
+client_secret*.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv/
+venv/
+
+# CSV de leads (dados sensíveis)
+leads_*.csv
+
+# macOS
+.DS_Store
