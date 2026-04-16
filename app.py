@@ -24,7 +24,8 @@ except ImportError:
 # ═══════════════════════════════════════════════════════════
 #  CONFIG
 # ═══════════════════════════════════════════════════════════
-DEFAULT_API_KEY = "AIzaSyAsUm3zE7M33f_9D_Zqif51OpoY4QzVPqE"
+# Chave lida do Streamlit Secrets (nunca hardcode no código!)
+DEFAULT_API_KEY = st.secrets.get("GOOGLE_MAPS_API_KEY", "")
 
 PLACES_SEARCH_URL = "https://places.googleapis.com/v1/places:searchText"
 PLACES_DETAIL_URL = "https://places.googleapis.com/v1/places/{place_id}"
@@ -266,6 +267,9 @@ run_btn = st.button("🚀  Buscar Leads Agora", use_container_width=True)
 #  EXECUÇÃO
 # ═══════════════════════════════════════════════════════════
 if run_btn:
+    if not DEFAULT_API_KEY:
+        st.error("⚠️ API Key não configurada. Adicione GOOGLE_MAPS_API_KEY nos Secrets do Streamlit Cloud.")
+        st.stop()
     if not biz_type or not location:
         st.error("⚠️ Preencha o **tipo de negócio** e a **cidade** antes de buscar.")
         st.stop()
