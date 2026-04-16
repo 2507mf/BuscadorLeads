@@ -364,36 +364,3 @@ if run_btn:
         )
 
     st.balloons()
-
-
-# ═══════════════════════════════════════════════════════════
-#  TELA INICIAL
-# ═══════════════════════════════════════════════════════════
-else:
-    st.markdown("### 👆 Como funciona")
-    steps = [
-        ("1", "Escolha o tipo de negócio",
-         "Ex: <i>empresas de energia solar, construtoras, clínicas odontológicas...</i>"),
-        ("2", "Informe a cidade",
-         "Ex: <i>São Paulo Brasil, Miami FL USA, Buenos Aires Argentina...</i>"),
-        ("3", "Clique em Buscar Leads",
-         "O sistema consulta o Google Maps e coleta telefone, site e email automaticamente."),
-        ("4", "Baixe o arquivo",
-         "Faça download em CSV ou Excel — pronto para usar no seu CRM ou WhatsApp."),
-    ]
-    for num, title, desc in steps:
-        st.markdown(f"""
-        <div class="step">
-          <div class="step-num">{num}</div>
-          <div class="step-text">
-            <b>{title}</b>
-            <span style="color:#94a3b8;font-size:0.88rem">{desc}</span>
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="tip-box" style="margin-top:1.5rem">
-    ✅ <b>Sem cadastro</b> · Sem limite de buscas · Resultados salvos só no seu computador.
-    </div>
-    """, unsafe_allow_html=True)
