@@ -247,57 +247,17 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Exemplos rápidos
-st.markdown("**⚡ Exemplos rápidos:**")
-ex_cols = st.columns(4)
-examples = [
-    ("☀️ Solar SP",    "empresas de energia solar", "São Paulo, Brasil"),
-    ("🏥 Clínicas RJ", "clínicas médicas",          "Rio de Janeiro, Brasil"),
-    ("🏨 Hotéis Miami","hotéis",                    "Miami FL USA"),
-    ("🏗️ Construtoras","construtoras",              "Belo Horizonte, Brasil"),
-]
-for col, (label, biz, loc) in zip(ex_cols, examples):
-    with col:
-        if st.button(label, use_container_width=True, key=f"ex_{label}"):
-            st.session_state["_biz"] = biz
-            st.session_state["_loc"] = loc
-            st.rerun()
-
 col1, col2 = st.columns(2)
 with col1:
     biz_type = st.text_input(
         "🏢 Tipo de negócio",
-        value=st.session_state.get("_biz", ""),
         placeholder="ex: empresas de energia solar",
     )
 with col2:
     location = st.text_input(
         "📍 Cidade / Estado / País",
-        value=st.session_state.get("_loc", ""),
         placeholder="ex: São Paulo, Brasil",
     )
-
-max_results = st.select_slider(
-    "📊 Quantos leads quer buscar?",
-    options=[10, 20, 30, 40, 60],
-    value=20,
-)
-
-# Sheets (colapsado)
-with st.expander("📊 Exportar para Google Sheets (opcional)"):
-    st.markdown("""
-    <div class="tip-box">
-    Para usar o Sheets você precisa de um <b>Service Account JSON</b> do Google Cloud.
-    <a href="https://console.cloud.google.com/iam-admin/serviceaccounts"
-    target="_blank" style="color:#f97316">Criar credencial aqui →</a>
-    </div>
-    """, unsafe_allow_html=True)
-    sheet_id   = st.text_input("ID da Planilha Google", placeholder="Cole o ID da URL da planilha")
-    creds_file = st.file_uploader("Arquivo service_account.json", type=["json"])
-    creds_json = json.load(creds_file) if creds_file else None
-    use_sheets = bool(sheet_id and creds_json)
-    if creds_json:
-        st.success("✅ Credenciais carregadas!")
 
 run_btn = st.button("🚀  Buscar Leads Agora", use_container_width=True)
 
@@ -321,7 +281,7 @@ if run_btn:
 
     with st.status("📡 Buscando no Google Maps...", expanded=True) as status:
         st.write("Consultando Places API...")
-        places = search_places(query, DEFAULT_API_KEY, max_results)
+        places = search_places(query, DEFAULT_API_KEY, 20)
         if not places:
             status.update(label="❌ Nenhum resultado encontrado.", state="error")
             st.warning("Tente mudar o tipo de negócio ou a cidade.")
@@ -402,16 +362,6 @@ if run_btn:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             use_container_width=True,
         )
-
-    # Sheets
-    if use_sheets:
-        with st.spinner("📊 Exportando para Google Sheets..."):
-            tab_name = f"{biz_type[:18]} – {location[:15]}"
-            ok, result = write_to_sheets(rows, sheet_id, creds_json, tab_name)
-        if ok:
-            st.success(f"✅ {result} leads salvos na planilha (aba: *{tab_name}*)")
-        else:
-            st.error(f"Erro no Google Sheets: {result}")
 
     st.balloons()
 
